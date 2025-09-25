@@ -174,14 +174,20 @@ def iniciar_interfaz(avl, config):
         pygame.draw.line(pantalla, (255, 255, 255), (0, carretera_y), (ANCHO_JUEGO, carretera_y), 4)
         pygame.draw.line(pantalla, (255, 255, 255), (0, carretera_y + carretera_alto), (ANCHO_JUEGO, carretera_y + carretera_alto), 4)
 
-        # Líneas centrales amarillas (segmentadas)
-        for i in range(0, ANCHO_JUEGO, 40):
-            pygame.draw.line(pantalla, (255, 215, 0), (i, carretera_y + carretera_alto // 2), (i + 20, carretera_y + carretera_alto // 2), 4)
+        # Línea central amarilla (continua)
+        pygame.draw.line(
+            pantalla, (255, 215, 0),
+            (0, carretera_y + carretera_alto // 2),
+            (ANCHO_JUEGO, carretera_y + carretera_alto // 2), 4
+        )
 
-        # Líneas blancas de carriles
+        # Líneas blancas de carriles (continuas)
         for offset in [carretera_alto // 3, 2 * carretera_alto // 3]:
-            for i in range(0, ANCHO_JUEGO, 40):
-                pygame.draw.line(pantalla, (255, 255, 255), (i, carretera_y + offset), (i + 20, carretera_y + offset), 2)
+            pygame.draw.line(
+                pantalla, (255, 255, 255),
+                (0, carretera_y + offset),
+                (ANCHO_JUEGO, carretera_y + offset), 2
+            )
 
         # Dibuja el área del juego
         #pygame.draw.rect(pantalla, (40, 40, 40), (0, 0, ANCHO_JUEGO, ALTO))
@@ -203,7 +209,7 @@ def iniciar_interfaz(avl, config):
         if avl.raiz is None:
             pantalla.fill(COLOR_FONDO)
             font = pygame.font.SysFont(None, 80)
-            texto = font.render("GAME OVER", True, (255, 255, 255))
+            texto = font.render("GANASTE!!", True, (255, 255, 255))
             pantalla.blit(texto, (ANCHO // 2 - 200, ALTO // 2 - 40))
             pygame.display.flip()
             pygame.time.wait(3000)  # Espera 3 segundos
