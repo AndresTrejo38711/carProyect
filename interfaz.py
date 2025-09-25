@@ -86,10 +86,15 @@ def iniciar_interfaz(avl, config):
 
         # 5) Consulta de obstáculos visibles
         visibles = avl.rango(
-            avl.raiz,
-            cam_x, cam_x + ANCHO_JUEGO,
-            0,         ALTO
+                avl.raiz,
+                float('-inf'), float('inf'),  # Todos los valores de x
+                float('-inf'), float('inf')   # Todos los valores de y
         )
+
+        # 5.1) Eliminar obstáculos que ya pasaste (quedaron atrás de la cámara)
+        pasados = avl.rango(avl.raiz, float('-inf'), cam_x - 1, 0, ALTO)
+        for obs in pasados:
+            avl.raiz = avl.eliminar(avl.raiz, obs["x"], obs["y"])
 
         # 6) Detección de colisiones y eliminación de nodo AVL
         car_rect = pygame.Rect(CAR_POS_X, carrito_y, CAR_WIDTH, CAR_HEIGHT)
