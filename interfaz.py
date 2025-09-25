@@ -7,22 +7,49 @@ from visual_arbol import dibujar_arbol_en_pantalla
 ANCHO_JUEGO, ANCHO_ARBOL = 700, 400
 ANCHO, ALTO = ANCHO_JUEGO + ANCHO_ARBOL, 600
 
-CAR_WIDTH, CAR_HEIGHT = 50, 30
+CAR_WIDTH, CAR_HEIGHT = 80, 60
 CAR_POS_X = 100
 
-OBS_WIDTH, OBS_HEIGHT = 40, 40
+OBS_WIDTH, OBS_HEIGHT = 60, 60
+
+#Barra de energia style  (esto deberia ir en otra clase al igual que las rutas de las imagenes de los obstaculos y carrito)
+def dibujar_barra_energia(pantalla, x, y, ancho, alto, energia, energia_max):
+    # Dibuja el fondo de la barra (gris)
+    pygame.draw.rect(pantalla, (50, 50, 50), (x, y, ancho, alto))
+    # Dibuja el degradado de energía
+    barra_ancho = int(ancho * energia / energia_max)
+    for i in range(barra_ancho):
+        r = int(0 + (50 * (i / ancho)))
+        g = int(255 - (80 * (i / ancho)))
+        b = int(0 + (50 * (i / ancho)))
+        color = (r, g, b)
+        pygame.draw.rect(pantalla, color, (x + i, y, 1, alto))
+    # Dibuja el borde de la barra
+    pygame.draw.rect(pantalla, (0, 0, 0), (x, y, ancho, alto), 2)
+
+# Carga de imagenes
+car_img = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\carrito.png")
+car_img = pygame.transform.scale(car_img, (CAR_WIDTH, CAR_HEIGHT))
+img_obstaculos = {
+    "roca":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "cono":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "hueco":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "aceite": pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "default":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
+}
+
 
 COLOR_FONDO      = (50, 50, 50)
 COLOR_CARRITO    = (0, 255, 0)
 COLOR_OBSTACULO  = (255, 0, 0)
 COLOR_ENERGIA_BG = (0,   0,   0)
-COLOR_ENERGIA    = (0, 255,   0)
+COLOR_ENERGIA    = (0, 120, 255)
 
 DAÑO_POR_TIPO = {
-    "roca":   20,
-    "cono":   10,
-    "hueco":  15,
-    "aceite":  5,
+    "roca":   110,
+    "cono":   110,
+    "hueco":  125,
+    "aceite":  115,
     "default":10
 }
 
@@ -44,9 +71,11 @@ def iniciar_interfaz(avl, config):
     mundo_x   = 0
     saltando  = False
     vel_salto = 0
-    energia   = 100
+    energia   = 300
 
     mostrar_arbol = True  # Mostrar el árbol al lado del juego
+    pausado = False  # Estado de pausa
+
 
     # Bucle principal
     while True:
@@ -63,6 +92,18 @@ def iniciar_interfaz(avl, config):
 
                 elif evento.key == pygame.K_t:
                     mostrar_arbol = not mostrar_arbol  # Alternar visibilidad del árbol
+
+                elif evento.key == pygame.K_p:
+                    pausado = not pausado  # Alternar pausa
+        if pausado:
+            # Mostrar letrero de pausa
+            pantalla.fill(COLOR_FONDO)
+            font = pygame.font.SysFont(None, 80)
+            texto = font.render("PAUSA", True, (255, 255, 0))
+            pantalla.blit(texto, (ANCHO // 2 - 120, ALTO // 2 - 40))
+            pygame.display.flip()
+            reloj.tick(fps)
+            continue
 
         # 2) Movimiento vertical
         teclas = pygame.key.get_pressed()
@@ -108,29 +149,66 @@ def iniciar_interfaz(avl, config):
                 break
 
         if energia <= 0:
-            print("¡Juego terminado! Sin energía.")
+            pantalla.fill(COLOR_FONDO)
+            font = pygame.font.SysFont(None, 80)
+            texto = font.render("GAME OVER", True, (255, 0, 0))
+            pantalla.blit(texto, (ANCHO // 2 - 200, ALTO // 2 - 40))
+            font2 = pygame.font.SysFont(None, 40)
+            texto2 = font2.render("¡Sin energía!", True, (255, 255, 255))
+            pantalla.blit(texto2, (ANCHO // 2 - 120, ALTO // 2 + 50))
+            pygame.display.flip()
+            pygame.time.wait(3000)  # Espera 3 segundos
             pygame.quit()
             return
 
         # 7) Dibujado de elementos
-        pantalla.fill(COLOR_FONDO)
+        # Fondo verde (césped)
+        pantalla.fill((34, 139, 34))  # Verde césped
+
+        # Carretera (rectángulo gris)
+        carretera_y = 100
+        carretera_alto = 400
+        pygame.draw.rect(pantalla, (60, 60, 60), (0, carretera_y, ANCHO_JUEGO, carretera_alto))
+        
+        # Líneas blancas de los bordes
+        pygame.draw.line(pantalla, (255, 255, 255), (0, carretera_y), (ANCHO_JUEGO, carretera_y), 4)
+        pygame.draw.line(pantalla, (255, 255, 255), (0, carretera_y + carretera_alto), (ANCHO_JUEGO, carretera_y + carretera_alto), 4)
+
+        # Líneas centrales amarillas (segmentadas)
+        for i in range(0, ANCHO_JUEGO, 40):
+            pygame.draw.line(pantalla, (255, 215, 0), (i, carretera_y + carretera_alto // 2), (i + 20, carretera_y + carretera_alto // 2), 4)
+
+        # Líneas blancas de carriles
+        for offset in [carretera_alto // 3, 2 * carretera_alto // 3]:
+            for i in range(0, ANCHO_JUEGO, 40):
+                pygame.draw.line(pantalla, (255, 255, 255), (i, carretera_y + offset), (i + 20, carretera_y + offset), 2)
+
         # Dibuja el área del juego
-        pygame.draw.rect(pantalla, (40, 40, 40), (0, 0, ANCHO_JUEGO, ALTO))
-        pygame.draw.rect(pantalla, COLOR_CARRITO,
-                         (CAR_POS_X, carrito_y, CAR_WIDTH, CAR_HEIGHT))
+        #pygame.draw.rect(pantalla, (40, 40, 40), (0, 0, ANCHO_JUEGO, ALTO))
+        pantalla.blit(car_img, (CAR_POS_X, carrito_y))
 
         for obs in visibles:
             x_p = obs["x"] - cam_x
-            pygame.draw.rect(pantalla, COLOR_OBSTACULO,
-                             (x_p, obs["y"], OBS_WIDTH, OBS_HEIGHT))
+            tipo = obs.get("tipo", "default")
+            img = img_obstaculos.get(tipo, img_obstaculos["default"])
+            pantalla.blit(img, (x_p, obs["y"]))
 
         # Barra de energía
-        pygame.draw.rect(pantalla, COLOR_ENERGIA_BG, (10, 10, 100, 20))
-        pygame.draw.rect(pantalla, COLOR_ENERGIA,    (10, 10, energia, 20))
+        dibujar_barra_energia(pantalla, 10, 10, 100, 20, energia, 300)
 
         # Dibuja el árbol al lado derecho si está activado
         if mostrar_arbol:
             dibujar_arbol_en_pantalla(avl, pantalla, offset_x=ANCHO_JUEGO, ancho=ANCHO_ARBOL, alto=ALTO)
+
+        if avl.raiz is None:
+            pantalla.fill(COLOR_FONDO)
+            font = pygame.font.SysFont(None, 80)
+            texto = font.render("GAME OVER", True, (255, 255, 255))
+            pantalla.blit(texto, (ANCHO // 2 - 200, ALTO // 2 - 40))
+            pygame.display.flip()
+            pygame.time.wait(3000)  # Espera 3 segundos
+            pygame.quit()
+            return
 
         pygame.display.flip()
         reloj.tick(fps)
