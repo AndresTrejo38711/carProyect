@@ -56,6 +56,50 @@ DAÑO_POR_TIPO = {
     "default":10
 }
 
+def menu_principal(avl, config):
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Menú Principal")
+    font = pygame.font.SysFont(None, 60)
+    clock = pygame.time.Clock()
+
+    fondo = pygame.image.load("C://Users//Camil//Documents//Andres U//Sistemas 5//estructura de datos//proyecto//resources//fondo.png")
+    fondo = pygame.transform.scale(fondo, (1200, 900))  
+
+    seleccionado = 0  # índice de la opción seleccionada
+    opciones = ["Iniciar Juego", "Salir"]
+
+    while True:
+        #pantalla.fill((0, 100, 200))  # fondo azul
+        pantalla.blit(fondo, (0, 0))  # dibuja el fondo
+
+        for i, opcion in enumerate(opciones):
+            color = (255, 255, 0) if i == seleccionado else (255, 255, 255)
+            texto = font.render(opcion, True, color)
+            pantalla.blit(texto, (ANCHO//2 - 150, ALTO//2 + i*80))
+
+        pygame.display.flip()
+
+        # Manejo de eventos
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    seleccionado = (seleccionado - 1) % len(opciones)
+                elif event.key == pygame.K_DOWN:
+                    seleccionado = (seleccionado + 1) % len(opciones)
+                elif event.key == pygame.K_RETURN:  # Enter
+                    if opciones[seleccionado] == "Iniciar Juego":
+                        iniciar_interfaz(avl, config)
+                        return
+                    elif opciones[seleccionado] == "Salir":
+                        pygame.quit()
+                        sys.exit()
+        clock.tick(30)
+
 def iniciar_interfaz(avl, config):
     # Extraer configuración
     velocidad     = config.get("velocidad", 2)
