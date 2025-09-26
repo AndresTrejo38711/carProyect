@@ -1,16 +1,19 @@
 import pygame
 from visual_arbol import dibujar_arbol_en_pantalla
+import recorrido 
+import sys
+import json
 
-# ---------------------------------------------------
+
 # Constantes de pantalla y objetos
-# ---------------------------------------------------
-ANCHO_JUEGO, ANCHO_ARBOL = 700, 400
+ANCHO_JUEGO, ANCHO_ARBOL = 800, 400
 ANCHO, ALTO = ANCHO_JUEGO + ANCHO_ARBOL, 600
 
 CAR_WIDTH, CAR_HEIGHT = 80, 60
 CAR_POS_X = 100
 
 OBS_WIDTH, OBS_HEIGHT = 60, 60
+
 
 #Barra de energia style  (esto deberia ir en otra clase al igual que las rutas de las imagenes de los obstaculos y carrito)
 def dibujar_barra_energia(pantalla, x, y, ancho, alto, energia, energia_max):
@@ -56,6 +59,7 @@ DAÑO_POR_TIPO = {
     "default":10
 }
 
+
 def menu_principal(avl, config):
     pygame.init()
     pantalla = pygame.display.set_mode((ANCHO, ALTO))
@@ -64,10 +68,10 @@ def menu_principal(avl, config):
     clock = pygame.time.Clock()
 
     fondo = pygame.image.load("C://Users//Camil//Documents//Andres U//Sistemas 5//estructura de datos//proyecto//CarProyect//resources//fondo.png")
-    fondo = pygame.transform.scale(fondo, (1200, 900))  
+    fondo = pygame.transform.scale(fondo, (1200, 700))  
 
     seleccionado = 0  # índice de la opción seleccionada
-    opciones = ["Iniciar Juego", "Salir"]
+    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Salir"]
 
     while True:
         #pantalla.fill((0, 100, 200))  # fondo azul
@@ -76,7 +80,7 @@ def menu_principal(avl, config):
         for i, opcion in enumerate(opciones):
             color = (255, 255, 0) if i == seleccionado else (255, 255, 255)
             texto = font.render(opcion, True, color)
-            pantalla.blit(texto, (ANCHO//2 - 150, ALTO//2 + i*80))
+            pantalla.blit(texto, (30, 120 + i * 60)) 
 
         pygame.display.flip()
 
@@ -95,13 +99,166 @@ def menu_principal(avl, config):
                     if opciones[seleccionado] == "Iniciar Juego":
                         iniciar_interfaz(avl, config)
                         return
+                    elif opciones[seleccionado] == "Recorridos":
+                        mostrar_recorridos(avl)
+                    elif opciones[seleccionado] == "Agregar Obstáculo":
+                        agregar_obstaculo(avl, config)
                     elif opciones[seleccionado] == "Salir":
                         pygame.quit()
                         sys.exit()
         clock.tick(30)
 
+# Opcion de agregar obstaculo
+def agregar_obstaculo(avl, config):
+    distancia_total = config.get("distancia_total", 5000)
+
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Agregar Obstáculo")
+    font = pygame.font.SysFont(None, 40)
+    font2 = pygame.font.SysFont(None, 30)
+    clock = pygame.time.Clock()
+
+    tipos = ["roca", "cono", "hueco", "aceite", "arbol", "arbusto", "perrito"]
+    seleccionado = 0
+    x_text = ""
+    y_text = ""
+    input_activo = "x"  # "x" o "y"
+
+    mensaje = ""
+
+    import json
+
+    def guardar_obstaculos_json(config, avl, ruta="obstaculos.json"):
+        # Recorrer el árbol y obtener todos los obstáculos
+        def recolectar(nodo, lista):
+            if nodo:
+                recolectar(nodo.izquierda, lista)
+                lista.append({"x": nodo.x, "y": nodo.y, "tipo": nodo.tipo})
+                recolectar(nodo.derecha, lista)
+        lista = []
+        recolectar(avl.raiz, lista)
+        datos = {"config": config, "obstaculos": lista}
+        with open(ruta, "w") as f:
+            json.dump(datos, f, indent=2)
+
+    while True:
+        pantalla.fill((30, 30, 60))
+        texto = font.render("Agregar Obstáculo", True, (255, 255, 255))
+        pantalla.blit(texto, (ANCHO//2 - 200, 60))
+
+        # Campos de texto para coordenadas
+        color_x = (255, 255, 0) if input_activo == "x" else (255, 255, 255)
+        color_y = (255, 255, 0) if input_activo == "y" else (255, 255, 255)
+        pantalla.blit(font2.render(f"X: {x_text}", True, color_x), (ANCHO//2 - 100, 150))
+        pantalla.blit(font2.render(f"Y: {y_text}", True, color_y), (ANCHO//2 + 50, 150))
+        pantalla.blit(font2.render(f"Tipo: {tipos[seleccionado]}", True, (255,255,0)), (ANCHO//2 - 100, 200))
+
+        pantalla.blit(font2.render("Tab para cambiar campo, flechas para tipo, Enter para agregar, ESC para salir", True, (200,200,200)), (ANCHO//2 - 300, 300))
+        pantalla.blit(font2.render(mensaje, True, (255,100,100)), (ANCHO//2 - 100, 350))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_TAB:
+                    input_activo = "y" if input_activo == "x" else "x"
+                elif event.key == pygame.K_UP:
+                    seleccionado = (seleccionado - 1) % len(tipos)
+                elif event.key == pygame.K_DOWN:
+                    seleccionado = (seleccionado + 1) % len(tipos)
+                elif event.key == pygame.K_RETURN:
+                    try:
+                        x = int(x_text)
+                        y = int(y_text)
+                        if 0 <= x <= distancia_total and 0 <= y <= ALTO:
+                            avl.raiz = avl.insertar(avl.raiz, x, y, tipos[seleccionado])
+                            guardar_obstaculos_json(config, avl)  
+                            mensaje = "¡Obstáculo agregado!"
+                            x_text, y_text = "", ""
+                        else:
+                            mensaje = "Coordenadas fuera de rango"
+                    except ValueError:
+                        mensaje = "Coordenadas inválidas"
+                elif event.key == pygame.K_BACKSPACE:
+                    if input_activo == "x":
+                        x_text = x_text[:-1]
+                    else:
+                        y_text = y_text[:-1]
+                else:
+                    if event.unicode.isdigit():
+                        if input_activo == "x":
+                            x_text += event.unicode
+                        else:
+                            y_text += event.unicode
+
+        pygame.display.flip()
+        clock.tick(30)
+
+# Opcion mostrar recorridos
+def mostrar_recorridos(avl):
+
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Recorridos AVL")
+    font = pygame.font.SysFont(None, 18)
+    clock = pygame.time.Clock()
+
+    # Obtén los recorridos
+    inorden   = recorrido.inorden(avl.raiz)
+    preorden  = recorrido.preorden(avl.raiz)
+    postorden = recorrido.postorden(avl.raiz)
+    bfs       = recorrido.bfs(avl.raiz)
+
+    recorridos = [
+        ("Inorden", inorden),
+        ("Preorden", preorden),
+        ("Postorden", postorden),
+        ("Anchura", bfs)
+    ]
+
+    def render_lista(nombre, lista, x, y, font, pantalla, max_width):
+        # Título con color diferente
+        titulo_color = (255, 215, 0)  # Amarillo dorado
+        lista_color = (255, 255, 255) # Blanco
+
+        texto = f"{nombre}: "
+        rendered = font.render(texto, True, titulo_color)
+        pantalla.blit(rendered, (x, y))
+        offset = rendered.get_width()
+        linea = ""
+        for item in lista:
+            item_str = str(item)
+            if font.size(linea + item_str)[0] + x + offset > max_width:
+                rendered = font.render(linea, True, lista_color)
+                pantalla.blit(rendered, (x + offset, y))
+                y += 30
+                linea = ""
+                offset = 0
+            linea += item_str + ", "
+        if linea:
+            rendered = font.render(linea, True, lista_color)
+            pantalla.blit(rendered, (x + offset, y))
+        return y + 40
+
+    running = True
+    while running:
+        pantalla.fill((30, 30, 60))
+        y = 40
+        for nombre, lista in recorridos:
+            y = render_lista(nombre, lista, 30, y, font, pantalla, ANCHO - 60)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                running = False
+
+        pygame.display.flip()
+        clock.tick(30)
+
+
 def iniciar_interfaz(avl, config):
     # Extraer configuración
+    distancia_total = config.get("distancia_total", 5000)
     velocidad     = config.get("velocidad", 2)
     salto_altura  = config.get("salto_altura", 15)
     refresco_ms   = config.get("refresco_ms", 200)
@@ -171,6 +328,25 @@ def iniciar_interfaz(avl, config):
         # 4) Avance en X del "mundo" y cálculo de cámara
         mundo_x += velocidad
         cam_x    = mundo_x - CAR_POS_X
+
+        # Dibuja la meta si está en pantalla
+        distancia_total = config.get("distancia_total", 5000)
+        meta_x = distancia_total - cam_x
+        if 0 <= meta_x <= ANCHO_JUEGO:
+            meta_rect = pygame.Rect(meta_x, carretera_y, 20, carretera_alto)
+            pygame.draw.rect(pantalla, (255, 0, 255), meta_rect)  # Meta color fucsia
+            font_meta = pygame.font.SysFont(None, 40)
+            pantalla.blit(font_meta.render("META", True, (255,255,255)), (meta_x - 10, carretera_y - 40))
+
+        if mundo_x >= distancia_total:
+            pantalla.fill(COLOR_FONDO)
+            font = pygame.font.SysFont(None, 80)
+            texto = font.render("¡Llegaste a la meta!", True, (0, 255, 0))
+            pantalla.blit(texto, (ANCHO // 2 - 250, ALTO // 2 - 40))
+            pygame.display.flip()
+            pygame.time.wait(3000)
+            pygame.quit()
+            return
 
         # 5) Consulta de obstáculos visibles
         visibles = avl.rango(
@@ -254,7 +430,7 @@ def iniciar_interfaz(avl, config):
         if mostrar_arbol:
             dibujar_arbol_en_pantalla(avl, pantalla, offset_x=ANCHO_JUEGO, ancho=ANCHO_ARBOL, alto=ALTO)
 
-        if avl.raiz is None:
+        if avl.raiz is None and mundo_x >= distancia_total:
             pantalla.fill(COLOR_FONDO)
             font = pygame.font.SysFont(None, 80)
             texto = font.render("GANASTE!!", True, (255, 255, 255))
@@ -263,6 +439,8 @@ def iniciar_interfaz(avl, config):
             pygame.time.wait(3000)  # Espera 3 segundos
             pygame.quit()
             return
+        
+        
 
         pygame.display.flip()
         reloj.tick(fps)

@@ -2,41 +2,174 @@
   "config": {
     "velocidad": 10,
     "salto_altura": 10,
-    "refresco_ms": 50
+    "refresco_ms": 50,
+    "distancia_total": 4000
   },
   "obstaculos": [
-    {"x": 150, "y": 200, "tipo": "roca"},
-    {"x": 320, "y": 350, "tipo": "cono"},
-    {"x": 500, "y": 150, "tipo": "hueco"},
-    {"x": 1200, "y": 300, "tipo": "aceite"},
-    {"x": 800, "y": 400, "tipo": "roca"},
-    {"x": 1940, "y": 525, "tipo": "perrito"},
-    {"x": 1710, "y": 525, "tipo": "arbol"},
-    {"x": 1130, "y": 25, "tipo": "arbusto"},
-    {"x": 600, "y": 250, "tipo": "cono"},
-    {"x": 400, "y": 100, "tipo": "hueco"},
-    {"x": 1000, "y": 350, "tipo": "aceite"},
-    {"x": 1400, "y": 200, "tipo": "roca"},
-    {"x": 1600, "y": 350, "tipo": "cono"},
-    {"x": 1800, "y": 150, "tipo": "hueco"},
-    {"x": 2000, "y": 300, "tipo": "aceite"},
-    {"x": 2200, "y": 400, "tipo": "roca"},
-    {"x": 2400, "y": 250, "tipo": "cono"},
-    {"x": 2600, "y": 100, "tipo": "hueco"},
-    {"x": 2800, "y": 350, "tipo": "aceite"},
-    {"x": 3000, "y": 200, "tipo": "roca"},
-    {"x": 3200, "y": 150, "tipo": "cono"},
-    {"x": 3400, "y": 300, "tipo": "hueco"},
-    {"x": 3600, "y": 400, "tipo": "aceite"},
-    {"x": 350, "y": 25, "tipo": "perrito"},
-    {"x": 760, "y": 525, "tipo": "arbol"},
-    {"x": 980, "y": 25, "tipo": "arbusto"},
-    {"x": 1280, "y": 25, "tipo": "perrito"},
-    {"x": 1850, "y": 525, "tipo": "arbol"},
-    {"x": 2500, "y": 25, "tipo": "arbusto"},
-    {"x": 3300, "y": 25, "tipo": "perrito"}
-
+    {
+      "x": 150,
+      "y": 200,
+      "tipo": "roca"
+    },
+    {
+      "x": 320,
+      "y": 350,
+      "tipo": "cono"
+    },
+    {
+      "x": 350,
+      "y": 25,
+      "tipo": "perrito"
+    },
+    {
+      "x": 400,
+      "y": 100,
+      "tipo": "hueco"
+    },
+    {
+      "x": 500,
+      "y": 150,
+      "tipo": "hueco"
+    },
+    {
+      "x": 600,
+      "y": 250,
+      "tipo": "cono"
+    },
+    {
+      "x": 760,
+      "y": 525,
+      "tipo": "arbol"
+    },
+    {
+      "x": 800,
+      "y": 400,
+      "tipo": "roca"
+    },
+    {
+      "x": 980,
+      "y": 25,
+      "tipo": "arbusto"
+    },
+    {
+      "x": 1000,
+      "y": 350,
+      "tipo": "aceite"
+    },
+    {
+      "x": 1130,
+      "y": 25,
+      "tipo": "arbusto"
+    },
+    {
+      "x": 1200,
+      "y": 300,
+      "tipo": "aceite"
+    },
+    {
+      "x": 1280,
+      "y": 25,
+      "tipo": "perrito"
+    },
+    {
+      "x": 1400,
+      "y": 200,
+      "tipo": "roca"
+    },
+    {
+      "x": 1600,
+      "y": 350,
+      "tipo": "cono"
+    },
+    {
+      "x": 1710,
+      "y": 525,
+      "tipo": "arbol"
+    },
+    {
+      "x": 1800,
+      "y": 150,
+      "tipo": "hueco"
+    },
+    {
+      "x": 1850,
+      "y": 525,
+      "tipo": "arbol"
+    },
+    {
+      "x": 1940,
+      "y": 525,
+      "tipo": "perrito"
+    },
+    {
+      "x": 2000,
+      "y": 300,
+      "tipo": "aceite"
+    },
+    {
+      "x": 2200,
+      "y": 400,
+      "tipo": "roca"
+    },
+    {
+      "x": 2400,
+      "y": 250,
+      "tipo": "cono"
+    },
+    {
+      "x": 2500,
+      "y": 25,
+      "tipo": "arbusto"
+    },
+    {
+      "x": 2600,
+      "y": 100,
+      "tipo": "hueco"
+    },
+    {
+      "x": 2800,
+      "y": 350,
+      "tipo": "aceite"
+    },
+    {
+      "x": 3000,
+      "y": 200,
+      "tipo": "roca"
+    },
+    {
+      "x": 3200,
+      "y": 25,
+      "tipo": "perrito"
+    },
+    {
+      "x": 3200,
+      "y": 150,
+      "tipo": "cono"
+    },
+    {
+      "x": 3300,
+      "y": 25,
+      "tipo": "perrito"
+    },
+    {
+      "x": 3400,
+      "y": 300,
+      "tipo": "hueco"
+    },
+    {
+      "x": 3600,
+      "y": 170,
+      "tipo": "perrito"
+    },
+    {
+      "x": 3600,
+      "y": 400,
+      "tipo": "aceite"
+    },
+    {
+      "x": 3700,
+      "y": 450,
+      "tipo": "cono"
+    }
   ]
 }
-
-
