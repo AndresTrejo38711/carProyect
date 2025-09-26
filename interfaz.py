@@ -28,17 +28,17 @@ def dibujar_barra_energia(pantalla, x, y, ancho, alto, energia, energia_max):
     pygame.draw.rect(pantalla, (0, 0, 0), (x, y, ancho, alto), 2)
 
 # Carga de imagenes
-car_img = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\carrito.png")
+car_img = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carrito.png")
 car_img = pygame.transform.scale(car_img, (CAR_WIDTH, CAR_HEIGHT))
 img_obstaculos = {
-    "roca":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
-    "cono":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
-    "hueco":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
-    "aceite": pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "arbol":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\arbol.png"),  (OBS_WIDTH, OBS_HEIGHT)),
-    "arbusto":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\arbusto.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "perrito":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\perrito.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "default":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
+    "roca":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "cono":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "hueco":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "aceite": pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "arbol":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\arbol.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "arbusto":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\arbusto.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "perrito":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\perrito.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "default":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
 }
 
 
@@ -63,7 +63,7 @@ def menu_principal(avl, config):
     font = pygame.font.SysFont(None, 60)
     clock = pygame.time.Clock()
 
-    fondo = pygame.image.load("C://Users//Camil//Documents//Andres U//Sistemas 5//estructura de datos//proyecto//resources//fondo.png")
+    fondo = pygame.image.load("C://Users//Camil//Documents//Andres U//Sistemas 5//estructura de datos//proyecto//CarProyect//resources//fondo.png")
     fondo = pygame.transform.scale(fondo, (1200, 900))  
 
     seleccionado = 0  # índice de la opción seleccionada
