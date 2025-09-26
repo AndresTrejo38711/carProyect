@@ -31,19 +31,19 @@ def dibujar_barra_energia(pantalla, x, y, ancho, alto, energia, energia_max):
     pygame.draw.rect(pantalla, (0, 0, 0), (x, y, ancho, alto), 2)
 
 # Carga de imagenes
-car_img_salto = pygame.image.load("../resources/carroRojo.png")  # Imagen con color diferente
+car_img_salto = pygame.image.load("resources/carroRojo.png")  # Imagen con color diferente
 car_img_salto = pygame.transform.scale(car_img_salto, (CAR_WIDTH, CAR_HEIGHT))
-car_img = pygame.image.load("../resources/carrito.png")
+car_img = pygame.image.load("resources/carrito.png")
 car_img = pygame.transform.scale(car_img, (CAR_WIDTH, CAR_HEIGHT))
 img_obstaculos = {
-    "roca":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
-    "cono":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
-    "hueco":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
-    "aceite": pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "arbol":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\arbol.png"),  (OBS_WIDTH, OBS_HEIGHT)),
-    "arbusto":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\arbusto.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "perrito":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\perrito.png"), (OBS_WIDTH, OBS_HEIGHT)),
-    "default":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
+    "roca":   pygame.transform.scale(pygame.image.load("resources/rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "cono":   pygame.transform.scale(pygame.image.load("resources/conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
+    "hueco":  pygame.transform.scale(pygame.image.load("resources/bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "aceite": pygame.transform.scale(pygame.image.load("resources/aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "arbol":  pygame.transform.scale(pygame.image.load("resources/arbol.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "arbusto":pygame.transform.scale(pygame.image.load("resources/arbusto.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "perrito":pygame.transform.scale(pygame.image.load("resources/perrito.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "default":pygame.transform.scale(pygame.image.load("resources/carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
 }
 
 
@@ -69,7 +69,7 @@ def menu_principal(avl, config):
     font = pygame.font.SysFont(None, 60)
     clock = pygame.time.Clock()
 
-    fondo = pygame.image.load("C://Users//Camil//Documents//Andres U//Sistemas 5//estructura de datos//proyecto//CarProyect//resources//fondo.png")
+    fondo = pygame.image.load("resources/fondo.png")
     fondo = pygame.transform.scale(fondo, (1200, 700))  
 
     seleccionado = 0  # índice de la opción seleccionada
@@ -342,7 +342,7 @@ def iniciar_interfaz(avl, config):
                 elif evento.key == pygame.K_p:
                     pausado = not pausado  # Alternar pausa
         if pausado:
-            carroPausa = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroPausa.png")
+            carroPausa = pygame.image.load("resources/carroPausa.png")
             carroPausa = pygame.transform.scale(carroPausa, (ANCHO, ALTO))
             pantalla.blit(carroPausa, (0, 0))  # Dibuja la imagen de fondo de pausa
             font = pygame.font.SysFont(None, 80)
@@ -382,7 +382,7 @@ def iniciar_interfaz(avl, config):
             pantalla.blit(font_meta.render("META", True, (255,255,255)), (meta_x - 10, carretera_y - 40))
 
         if mundo_x >= distancia_total:
-            carroMeta = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroMeta.png")
+            carroMeta = pygame.image.load("resources/carroMeta.png")
             carroMeta = pygame.transform.scale(carroMeta, (ANCHO, ALTO))
             pantalla.blit(carroMeta, (0, 0))  # Dibuja la imagen de fondo de meta
             font = pygame.font.SysFont(None, 80)
@@ -418,7 +418,7 @@ def iniciar_interfaz(avl, config):
                 break
 
         if energia <= 0:
-            img_sin_energia = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroEstrellado.png")
+            img_sin_energia = pygame.image.load("resources/carroEstrellado.png")
             img_sin_energia = pygame.transform.scale(img_sin_energia, (ANCHO, ALTO))    
             pantalla.blit(img_sin_energia, (0, 0))  # Dibuja la imagen de fondo
             font = pygame.font.SysFont(None, 80)
