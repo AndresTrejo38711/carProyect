@@ -31,7 +31,9 @@ def dibujar_barra_energia(pantalla, x, y, ancho, alto, energia, energia_max):
     pygame.draw.rect(pantalla, (0, 0, 0), (x, y, ancho, alto), 2)
 
 # Carga de imagenes
-car_img = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carrito.png")
+car_img_salto = pygame.image.load("../resources/carroRojo.png")  # Imagen con color diferente
+car_img_salto = pygame.transform.scale(car_img_salto, (CAR_WIDTH, CAR_HEIGHT))
+car_img = pygame.image.load("../resources/carrito.png")
 car_img = pygame.transform.scale(car_img, (CAR_WIDTH, CAR_HEIGHT))
 img_obstaculos = {
     "roca":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\rocas.png"),   (OBS_WIDTH, OBS_HEIGHT)),
@@ -71,7 +73,7 @@ def menu_principal(avl, config):
     fondo = pygame.transform.scale(fondo, (1200, 700))  
 
     seleccionado = 0  # índice de la opción seleccionada
-    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Salir"]
+    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Dificultad", "Salir"]
 
     while True:
         #pantalla.fill((0, 100, 200))  # fondo azul
@@ -103,11 +105,51 @@ def menu_principal(avl, config):
                         mostrar_recorridos(avl)
                     elif opciones[seleccionado] == "Agregar Obstáculo":
                         agregar_obstaculo(avl, config)
+                    elif opciones[seleccionado] == "Dificultad":
+                        cambiar_dificultad(config)
                     elif opciones[seleccionado] == "Salir":
                         pygame.quit()
                         sys.exit()
         clock.tick(30)
 
+def cambiar_dificultad(config):
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Cambiar Dificultad")
+    font = pygame.font.SysFont(None, 60)
+    font2 = pygame.font.SysFont(None, 40)
+    clock = pygame.time.Clock()
+
+    velocidades = [5, 10, 20, 25, 35]
+    seleccionado = velocidades.index(config.get("velocidad", 2))
+
+    while True:
+        pantalla.fill((30, 30, 60))
+        texto = font.render("Selecciona la velocidad", True, (255, 255, 255))
+        pantalla.blit(texto, (30, 30))
+
+        for i, v in enumerate(velocidades):
+            color = (255, 255, 0) if i == seleccionado else (255, 255, 255)
+            txt = font2.render(f"{v}", True, color)
+            pantalla.blit(txt, (30, 120 + i * 60))
+
+        pantalla.blit(font2.render("Arriba/Abajo para elegir, Enter para confirmar, ESC para salir", True, (200,200,200)), (30, 500))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    seleccionado = (seleccionado - 1) % len(velocidades)
+                elif event.key == pygame.K_DOWN:
+                    seleccionado = (seleccionado + 1) % len(velocidades)
+                elif event.key == pygame.K_RETURN:
+                    config["velocidad"] = velocidades[seleccionado]
+                    return
+
+        pygame.display.flip()
+        clock.tick(30)
+        
 # Opcion de agregar obstaculo
 def agregar_obstaculo(avl, config):
     distancia_total = config.get("distancia_total", 5000)
@@ -300,8 +342,9 @@ def iniciar_interfaz(avl, config):
                 elif evento.key == pygame.K_p:
                     pausado = not pausado  # Alternar pausa
         if pausado:
-            # Mostrar letrero de pausa
-            pantalla.fill(COLOR_FONDO)
+            carroPausa = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroPausa.png")
+            carroPausa = pygame.transform.scale(carroPausa, (ANCHO, ALTO))
+            pantalla.blit(carroPausa, (0, 0))  # Dibuja la imagen de fondo de pausa
             font = pygame.font.SysFont(None, 80)
             texto = font.render("PAUSA", True, (255, 255, 0))
             pantalla.blit(texto, (ANCHO // 2 - 120, ALTO // 2 - 40))
@@ -339,9 +382,11 @@ def iniciar_interfaz(avl, config):
             pantalla.blit(font_meta.render("META", True, (255,255,255)), (meta_x - 10, carretera_y - 40))
 
         if mundo_x >= distancia_total:
-            pantalla.fill(COLOR_FONDO)
+            carroMeta = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroMeta.png")
+            carroMeta = pygame.transform.scale(carroMeta, (ANCHO, ALTO))
+            pantalla.blit(carroMeta, (0, 0))  # Dibuja la imagen de fondo de meta
             font = pygame.font.SysFont(None, 80)
-            texto = font.render("¡Llegaste a la meta!", True, (0, 255, 0))
+            texto = font.render("¡Llegaste a la meta!", True, (255, 0, 0))
             pantalla.blit(texto, (ANCHO // 2 - 250, ALTO // 2 - 40))
             pygame.display.flip()
             pygame.time.wait(3000)
@@ -365,14 +410,17 @@ def iniciar_interfaz(avl, config):
         for obs in visibles:
             x_p    = obs["x"] - cam_x
             obs_rc = pygame.Rect(x_p, obs["y"], OBS_WIDTH, OBS_HEIGHT)
-            if car_rect.colliderect(obs_rc):
+            # Solo colisiona si NO está saltando
+            if car_rect.colliderect(obs_rc) and not saltando:
                 daño     = DAÑO_POR_TIPO.get(obs["tipo"], DAÑO_POR_TIPO["default"])
                 energia -= daño
                 avl.raiz = avl.eliminar(avl.raiz, obs["x"], obs["y"])
                 break
 
         if energia <= 0:
-            pantalla.fill(COLOR_FONDO)
+            img_sin_energia = pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\CarProyect\\resources\\carroEstrellado.png")
+            img_sin_energia = pygame.transform.scale(img_sin_energia, (ANCHO, ALTO))    
+            pantalla.blit(img_sin_energia, (0, 0))  # Dibuja la imagen de fondo
             font = pygame.font.SysFont(None, 80)
             texto = font.render("GAME OVER", True, (255, 0, 0))
             pantalla.blit(texto, (ANCHO // 2 - 200, ALTO // 2 - 40))
@@ -415,7 +463,10 @@ def iniciar_interfaz(avl, config):
 
         # Dibuja el área del juego
         #pygame.draw.rect(pantalla, (40, 40, 40), (0, 0, ANCHO_JUEGO, ALTO))
-        pantalla.blit(car_img, (CAR_POS_X, carrito_y))
+        if saltando:
+            pantalla.blit(car_img_salto, (CAR_POS_X, carrito_y))
+        else:
+            pantalla.blit(car_img, (CAR_POS_X, carrito_y))
 
         for obs in visibles:
             x_p = obs["x"] - cam_x
