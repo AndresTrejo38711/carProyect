@@ -35,6 +35,9 @@ img_obstaculos = {
     "cono":   pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\conos.png"),   (OBS_WIDTH, OBS_HEIGHT)),
     "hueco":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\bache.png"),  (OBS_WIDTH, OBS_HEIGHT)),
     "aceite": pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\aceite.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "arbol":  pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\arbol.png"),  (OBS_WIDTH, OBS_HEIGHT)),
+    "arbusto":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\arbusto.png"), (OBS_WIDTH, OBS_HEIGHT)),
+    "perrito":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\perrito.png"), (OBS_WIDTH, OBS_HEIGHT)),
     "default":pygame.transform.scale(pygame.image.load("C:\\Users\\Camil\\Documents\\Andres U\\Sistemas 5\\estructura de datos\\proyecto\\resources\\carrito.png"),   (OBS_WIDTH, OBS_HEIGHT))
 }
 
@@ -162,6 +165,7 @@ def iniciar_interfaz(avl, config):
             return
 
         # 7) Dibujado de elementos
+
         # Fondo verde (césped)
         pantalla.fill((34, 139, 34))  # Verde césped
 
