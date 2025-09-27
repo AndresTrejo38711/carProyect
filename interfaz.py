@@ -393,11 +393,11 @@ def iniciar_interfaz(avl, config):
             pygame.quit()
             return
 
-        # 5) Consulta de obstáculos visibles
+         # 5) Consulta de obstáculos visibles (solo los que están en pantalla)
         visibles = avl.rango(
                 avl.raiz,
-                float('-inf'), float('inf'),  # Todos los valores de x
-                float('-inf'), float('inf')   # Todos los valores de y
+                cam_x, cam_x + ANCHO_JUEGO,  # Solo X visible en pantalla
+                0, ALTO                       # Solo Y visible en pantalla
         )
 
         # 5.1) Eliminar obstáculos que ya pasaste (quedaron atrás de la cámara)
