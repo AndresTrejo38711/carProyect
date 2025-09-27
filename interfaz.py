@@ -54,11 +54,14 @@ COLOR_ENERGIA_BG = (0,   0,   0)
 COLOR_ENERGIA    = (0, 120, 255)
 
 DAÑO_POR_TIPO = {
-    "roca":   110,
-    "cono":   110,
-    "hueco":  125,
-    "aceite":  115,
-    "default":10
+    "roca":    25,  # 25% de energía
+    "cono":    10,  # 10% de energía
+    "hueco":   15,  # 15% de energía
+    "aceite":  20,  # 20% de energía
+    "arbol":   30,  # 30% de energía
+    "arbusto": 15,  # 15% de energía
+    "perrito": 5,   # 5% de energía (menos daño)
+    "default": 10   # 10% por defecto
 }
 
 
@@ -317,7 +320,7 @@ def iniciar_interfaz(avl, config):
     mundo_x   = 0
     saltando  = False
     vel_salto = 0
-    energia   = 300
+    energia   = 100
 
     mostrar_arbol = True  # Mostrar el árbol al lado del juego
     pausado = False  # Estado de pausa
