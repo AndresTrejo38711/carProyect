@@ -538,7 +538,7 @@ def iniciar_interfaz(avl, config):
             pantalla.blit(img, (x_p, obs["y"]))
 
         # Barra de energía
-        dibujar_barra_energia(pantalla, 10, 10, 100, 20, energia, 300)
+        dibujar_barra_energia(pantalla, 10, 10, 100, 20, energia, 100)
 
         # Dibuja el árbol al lado derecho si está activado
         if mostrar_arbol:
