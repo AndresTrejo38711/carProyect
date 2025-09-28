@@ -76,7 +76,7 @@ def menu_principal(avl, config):
     fondo = pygame.transform.scale(fondo, (1200, 700))  
 
     seleccionado = 0  # índice de la opción seleccionada
-    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Dificultad", "Salir"]
+    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Dificultad", "Color del Auto", "Salir"]
 
     while True:
         #pantalla.fill((0, 100, 200))  # fondo azul
@@ -110,9 +110,58 @@ def menu_principal(avl, config):
                         agregar_obstaculo(avl, config)
                     elif opciones[seleccionado] == "Dificultad":
                         cambiar_dificultad(config)
+                    elif opciones[seleccionado] == "Color del Auto":
+                        seleccionar_color_auto(config)
                     elif opciones[seleccionado] == "Salir":
                         pygame.quit()
                         sys.exit()
+# Opción para seleccionar el color/estilo del auto
+def seleccionar_color_auto(config):
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Seleccionar Color del Auto")
+    font = pygame.font.SysFont(None, 60)
+    font2 = pygame.font.SysFont(None, 30)
+    clock = pygame.time.Clock()
+
+    estilos = [
+        ("Azul", "resources/cars/lr_modern_blue.png"),
+        ("Verde", "resources/cars/lr_modern_green.png"),
+        ("Rosa", "resources/cars/lr_modern_pink.png"),
+        ("Rojo", "resources/cars/lr_modern_red.png"),
+        ("Fantasma", "resources/cars/lr_modern_ghost.png")
+    ]
+    seleccionado = 0
+
+    while True:
+        pantalla.fill((30, 30, 60))
+        texto = font.render("Selecciona el color del auto", True, (255, 255, 255))
+        pantalla.blit(texto, (ANCHO//2 - 320, 60))
+
+        for i, (nombre, ruta) in enumerate(estilos):
+            color = (255, 255, 0) if i == seleccionado else (255, 255, 255)
+            texto_op = font2.render(nombre, True, color)
+            pantalla.blit(texto_op, (ANCHO//2 - 100, 180 + i * 50))
+            # Mostrar preview del auto
+            img = pygame.image.load(ruta)
+            img = pygame.transform.scale(img, (120, 60))
+            pantalla.blit(img, (ANCHO//2 + 80, 180 + i * 50))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    seleccionado = (seleccionado - 1) % len(estilos)
+                elif event.key == pygame.K_DOWN:
+                    seleccionado = (seleccionado + 1) % len(estilos)
+                elif event.key == pygame.K_RETURN:
+                    # Guardar selección en config
+                    config["car_img"] = estilos[seleccionado][1]
+                    return
+        clock.tick(30)
         clock.tick(30)
 
 def cambiar_dificultad(config):
@@ -325,6 +374,12 @@ def iniciar_interfaz(avl, config):
     mostrar_arbol = True  # Mostrar el árbol al lado del juego
     pausado = False  # Estado de pausa
 
+    # Cargar imagen del auto según selección
+    car_img_path = config.get("car_img", "resources/carrito.png")
+    car_img = pygame.image.load(car_img_path)
+    car_img = pygame.transform.scale(car_img, (CAR_WIDTH, CAR_HEIGHT))
+    car_img_salto = pygame.image.load("resources/carroRojo.png")
+    car_img_salto = pygame.transform.scale(car_img_salto, (CAR_WIDTH, CAR_HEIGHT))
 
     # Bucle principal
     while True:
@@ -467,7 +522,12 @@ def iniciar_interfaz(avl, config):
         # Dibuja el área del juego
         #pygame.draw.rect(pantalla, (40, 40, 40), (0, 0, ANCHO_JUEGO, ALTO))
         if saltando:
-            pantalla.blit(car_img_salto, (CAR_POS_X, carrito_y))
+            # Si el auto seleccionado es fantasma, no cambia color
+            if car_img_path.endswith("ghost.png"):
+                pantalla.blit(car_img, (CAR_POS_X, carrito_y))
+            else:
+                # Cambia a rojo durante el salto
+                pantalla.blit(car_img_salto, (CAR_POS_X, carrito_y))
         else:
             pantalla.blit(car_img, (CAR_POS_X, carrito_y))
 
