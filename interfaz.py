@@ -76,7 +76,7 @@ def menu_principal(avl, config):
     fondo = pygame.transform.scale(fondo, (1200, 700))  
 
     seleccionado = 0  # índice de la opción seleccionada
-    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Dificultad", "Color del Auto", "Salir"]
+    opciones = ["Iniciar Juego", "Recorridos", "Agregar Obstáculo", "Dificultad", "Color del Auto", "Refresco", "Salir"]
 
     while True:
         #pantalla.fill((0, 100, 200))  # fondo azul
@@ -112,6 +112,8 @@ def menu_principal(avl, config):
                         cambiar_dificultad(config)
                     elif opciones[seleccionado] == "Color del Auto":
                         seleccionar_color_auto(config)
+                    elif opciones[seleccionado] == "Refresco":
+                        cambiar_refresco(config)
                     elif opciones[seleccionado] == "Salir":
                         pygame.quit()
                         sys.exit()
@@ -162,6 +164,50 @@ def seleccionar_color_auto(config):
                     config["car_img"] = estilos[seleccionado][1]
                     return
         clock.tick(30)
+        clock.tick(30)
+
+def cambiar_refresco(config):
+    pygame.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("Cambiar Refresco")
+    font = pygame.font.SysFont(None, 60)
+    font2 = pygame.font.SysFont(None, 40)
+    clock = pygame.time.Clock()
+
+    refrescos = [50, 100, 150, 200, 250]  # valores en ms
+    seleccionado = 0
+    try:
+        seleccionado = refrescos.index(config.get("refresco_ms", 100))
+    except ValueError:
+        seleccionado = 1  # Default a 100ms
+
+    while True:
+        pantalla.fill((30, 30, 60))
+        texto = font.render("Selecciona el refresco (ms)", True, (255, 255, 255))
+        pantalla.blit(texto, (30, 30))
+
+        for i, r in enumerate(refrescos):
+            color = (255, 255, 0) if i == seleccionado else (255, 255, 255)
+            # Calcular FPS aproximado
+            fps = max(1, 1000 // r)
+            txt = font2.render(f"{r} ms (~{fps} FPS)", True, color)
+            pantalla.blit(txt, (30, 120 + i * 60))
+
+        pantalla.blit(font2.render("Arriba/Abajo para elegir, Enter para confirmar, ESC para salir", True, (200,200,200)), (30, 500))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    seleccionado = (seleccionado - 1) % len(refrescos)
+                elif event.key == pygame.K_DOWN:
+                    seleccionado = (seleccionado + 1) % len(refrescos)
+                elif event.key == pygame.K_RETURN:
+                    config["refresco_ms"] = refrescos[seleccionado]
+                    return
+
+        pygame.display.flip()
         clock.tick(30)
 
 def cambiar_dificultad(config):
