@@ -1,8 +1,8 @@
 {
   "config": {
-    "velocidad": 5,
+    "velocidad": 20,
     "salto_altura": 10,
-    "refresco_ms": 100,
+    "refresco_ms": 50,
     "distancia_total": 4000
   },
   "obstaculos": [
